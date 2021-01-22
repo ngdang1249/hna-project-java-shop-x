@@ -16,7 +16,7 @@ public interface IDAO<T, ID> {
 
     long count();
 
-    void deleteById(ID id);
+    boolean deleteById(ID id);
 
     void delete(T entity);
 }

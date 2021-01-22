@@ -2,8 +2,11 @@ package service;
 
 import dao.DAOFactory;
 import dao.IProductDAO;
-import dao.ProductDAOImpl;
-import model.Product;
+import entity.Product;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 public class ProductServiceImpl {
 
@@ -13,13 +16,21 @@ public class ProductServiceImpl {
         this.iProductDAO = DAOFactory.getInstance().getProductDAO();
     }
 
-    public void setiProductDAO(IProductDAO iProductDAO) {
-        this.iProductDAO = iProductDAO;
-    }
-
-    public int saveProduct(Product product) {
+    public int createProduct(Product product) throws SQLException {
         if (product != null) return iProductDAO.save(product);
-        return 0;
+        return -1;
     }
 
+    public List<Product> getProducts() {
+        return iProductDAO.findAll();
+    }
+
+    public boolean deleteById(Integer id) {
+        return iProductDAO.deleteById(id);
+    }
+
+
+    public Optional<Product> findById(Integer id) {
+        return iProductDAO.findById(id);
+    }
 }

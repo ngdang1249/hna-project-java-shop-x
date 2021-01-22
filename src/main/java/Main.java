@@ -1,23 +1,98 @@
-import controller.ProductController;
-import dao.DBUtil;
-import dao.ProductDAOImpl;
-import model.Product;
+import entity.Product;
 import service.ProductServiceImpl;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
 
-        Connection conn = DBUtil.getConnection();
-        ProductDAOImpl productDaoImpl = new ProductDAOImpl();
-        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
-        ProductController productController = new ProductController(productServiceImpl);
-        Product product = new Product("iPhone 11 Pro Max", 1100D);
-        productController.addProduct(product);
+    public static void main(String[] args) throws SQLException {
+        final Scanner scanner = new Scanner(System.in);
+        Connection conn = null;
+        ProductServiceImpl productService = new ProductServiceImpl();
+        do {
+            System.out.println("========================================================="
+                    + "\n\t\tWelcome to the Shop X!"
+                    + "\n=========================================================");
+            System.out.println("Please enter a choice and press <enter>: ");
+            System.out.println("\t1. List all product");
+            System.out.println("\t2. Create a new product");
+            System.out.println("\t4. View all customers");
+            System.out.println("\t5. View all orders");
+            System.out.println("\t5. Sign out");
+            System.out.println("\t10. Quit the application");
+            System.out.print("Enter you choice: ");
+
+            final int input = Integer.parseInt(scanner.nextLine());
+
+            switch (input) {
+                case 1:
+                    findProduct(productService);
+                    break;
+                case 2:
+                    createProductDetails(scanner, productService);
+                    break;
+                case 3:
+                    System.out.println("Customers");
+                    break;
+                case 4:
+                    System.out.println("Customer details");
+                    break;
+                case 10:
+                    System.out.println("Exiting application...bye.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice\n\n");
+            }
+        } while (true);
+    }
+
+    private static void createProductDetails(Scanner scanner, ProductServiceImpl productService) throws SQLException {
+        while (true) {
+            System.out.print("\nEnter the Product's name: ");
+            String name = scanner.nextLine();
+
+            System.out.print("\nEnter the Product's price: ");
+            double price = scanner.nextDouble();
+
+            Product product = new Product();
+            product.setName(name);
+            product.setPrice(price);
+            product.setCreatedDateTime(new Date());
+
+            productService.createProduct(product);
+            System.out.println("Created product record with name: " + product.getName());
+
+            scanner.nextLine();
+            System.out.print("Do you want to create another product? (y/n): ");
+            String choice = scanner.nextLine();
+
+            if (!"y".equalsIgnoreCase(choice)) {
+                break;
+            }
+        }
+    }
+
+    private static void findProduct(ProductServiceImpl productService) {
+        System.out.println("ID\tNAME\tPRICE");
+        System.out.println("==================================");
+        List<Product> products = productService.getProducts();
+        if (!products.isEmpty()) {
+            for (Product product : products) {
+                System.out.println(String.format("%d\t%s\t%s", product.getId(), product.getName(), product.getPrice()));
+//                System.out.println(DATE_FORMAT.format(person.getCreatedDateTime()));//NOSONAR
+            }
+        } else {
+            System.out.print(String.format("No Product record found."));
+        }
+        System.out.println("==================================\n");
     }
 
 }
