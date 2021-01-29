@@ -9,4 +9,8 @@ public class CategoryController {
         // categoryFacade.findAll();
         //categoryId
     }
+
+    public void getProductsByCategory() {
+
+    }
 }

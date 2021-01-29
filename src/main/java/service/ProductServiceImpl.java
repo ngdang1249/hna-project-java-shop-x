@@ -1,8 +1,8 @@
 package service;
 
-import dao.DAOFactory;
-import dao.IProductDAO;
-import entity.Product;
+import dao.ProductDAO;
+import dao.ProductDAOImpl;
+import entities.Product;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -10,27 +10,39 @@ import java.util.Optional;
 
 public class ProductServiceImpl {
 
-    private IProductDAO iProductDAO;
+    private ProductDAO productDAO;
 
     public ProductServiceImpl() {
-        this.iProductDAO = DAOFactory.getInstance().getProductDAO();
+        this.productDAO = new ProductDAOImpl();
     }
 
-    public int createProduct(Product product) throws SQLException {
-        if (product != null) return iProductDAO.save(product);
-        return -1;
+    public void create(Product product) throws SQLException {
+        if (product == null) {
+            System.out.println("Unable to get product details.");
+            return;
+        }
+        boolean status = productDAO.save(product);
+        if (status) {
+            System.out.println("Insert successfully!");
+        } else {
+            System.out.println("Insert failed!");
+        }
     }
 
-    public List<Product> getProducts() {
-        return iProductDAO.findAll();
+    public void edit() {
+
     }
 
-    public boolean deleteById(Integer id) {
-        return iProductDAO.deleteById(id);
+    public List<Product> findAll() {
+        return productDAO.findAll();
+    }
+
+    public boolean remove(Integer id) {
+        return productDAO.deleteById(id);
     }
 
 
-    public Optional<Product> findById(Integer id) {
-        return iProductDAO.findById(id);
+    public Optional<Product> find(Integer id) {
+        return productDAO.findById(id);
     }
 }

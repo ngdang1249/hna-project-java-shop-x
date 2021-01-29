@@ -1,6 +1,6 @@
 package controller;
 
-import entity.Product;
+import entities.Product;
 import service.ProductServiceImpl;
 
 import java.sql.SQLException;
@@ -22,22 +22,22 @@ public class ProductController {
         product.setName(scanner.nextLine());
         System.out.println("Enter the price: ");
         product.setPrice(scanner.nextDouble());
-        productServiceImpl.createProduct(product);
+        productServiceImpl.create(product);
     }
 
     public void showProductList() {
-        List<Product> products = productServiceImpl.getProducts();
+        List<Product> products = productServiceImpl.findAll();
         for (Product prod : products) {
             System.out.println(prod.toString());
         }
     }
 
     public boolean deleteProduct(Integer id) {
-        Optional<Product> product = productServiceImpl.findById(id);
+        Optional<Product> product = productServiceImpl.find(id);
         if (product.isPresent()) {
-            return productServiceImpl.deleteById(id);
+            return productServiceImpl.remove(id);
         }
-        System.out.println("Not found.");
+        System.out.println("No records found for the product id : " + id);
         return false;
     }
 }

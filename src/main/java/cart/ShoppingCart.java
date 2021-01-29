@@ -1,8 +1,7 @@
 package cart;
 
-import entity.Product;
+import entities.Product;
 
-import java.util.Hashtable;
 import java.util.List;
 
 public class ShoppingCart {

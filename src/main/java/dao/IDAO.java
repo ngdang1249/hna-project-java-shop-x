@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IDAO<T, ID> {
 
-    int save(T entity) throws SQLException;
+    boolean save(T entity) throws SQLException;
 
     Optional<T> findById(ID id);
 
